@@ -1,0 +1,107 @@
+.history-container {
+  display: flex;
+}
+
+/* SIDEBAR SAME AS DASHBOARD */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: linear-gradient(180deg, #1d976c, #93f9b9);
+  color: white;
+  padding: 20px;
+  position: fixed;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 12px 0;
+  cursor: pointer;
+}
+
+.sidebar li a {
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar .active {
+  font-weight: bold;
+}
+
+/* MAIN */
+.history-main {
+  margin-left: 240px;
+  padding: 30px;
+  width: 100%;
+  background: #abe8f8;
+  min-height: 100vh;
+}
+
+.history-main h2 {
+  margin-bottom: 20px;
+}
+
+/* DATE BLOCK */
+.date-block {
+  margin-bottom: 25px;
+}
+
+/* DATE HEADER */
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.totals span {
+  margin-left: 15px;
+  font-weight: bold;
+}
+
+/* FOOD CARDS */
+.food-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.food-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.food-card:hover {
+  transform: translateY(-3px);
+}
+
+.food-card h4 {
+  margin: 0;
+}
+
+.food-card p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: gray;
+}
+
+.right {
+  text-align: right;
+}
+
+.empty {
+  color: gray;
+}

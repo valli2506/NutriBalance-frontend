@@ -1,0 +1,147 @@
+.chat-page {
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a0b3b, #3a0d68);
+}
+
+/* LEFT SIDE */
+.chat-left-ui {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;   /* ✅ THIS FIXES YOUR ISSUE */
+}
+
+/* CENTER BOX */
+.center-box {
+  text-align: center;
+}
+
+/* LOGO */
+.logo-circle {
+  width: 150px;
+  height: 150px;
+  background: #7fd1c6;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  margin: auto;
+}
+
+/* TITLE */
+.center-box h1 {
+  margin-top: 20px;
+  color: #7fd1c6;
+  font-size: 40px;
+}
+
+/* CHAT BOX */
+.chat-box {
+  width: 400px;
+  height: 85vh;            /* 🔥 FIX: controls height */
+  background: #eee;
+  margin: auto 40px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+}
+
+/* HEADER */
+.chat-header {
+  background: linear-gradient(90deg, #7b2ff7, #9b4dff);
+  color: white;
+  padding: 15px;
+  font-weight: bold;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  background: #00ff90;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* BODY */
+.chat-body {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+/* MESSAGES */
+.msg {
+  margin-bottom: 10px;
+}
+
+.msg.bot {
+  text-align: left;
+}
+
+.msg.user {
+  text-align: right;
+}
+
+.bubble {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 70%;
+  background: #ddd;
+}
+
+.msg.user .bubble {
+  background: #7b2ff7;
+  color: white;
+}
+
+/* OPTIONS */
+.options {
+  margin-top: 5px;
+}
+
+.options button {
+  margin: 5px 5px 0 0;
+  padding: 6px 10px;
+  border: none;
+  background: #1abc9c;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.options button:hover {
+  background: #16a085;
+}
+
+/* FOOTER */
+.chat-footer {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+
+.chat-footer input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+}
+
+.chat-footer button {
+  padding: 10px 15px;
+  border: none;
+  background: #7b2ff7;
+  color: white;
+  cursor: pointer;
+}
+
+/* TYPING */
+.typing {
+  font-size: 12px;
+  color: gray;
+}

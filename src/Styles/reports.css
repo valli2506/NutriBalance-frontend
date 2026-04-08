@@ -1,0 +1,83 @@
+/* ===== MAIN LAYOUT ===== */
+.reports-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(to right, #daed84, #81e6d9);
+  font-family: Arial, sans-serif;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  position: fixed;              /* 🔥 fixed sidebar */
+  left: 0;
+  top: 0;
+  background: linear-gradient(to bottom, #f5b3e2, #c0b7f3);
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.sidebar h2 {
+  margin-bottom: 25px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+
+.sidebar li.active {
+  font-weight: bold;
+}
+
+/* ===== MAIN CONTENT (FIX OVERLAP HERE) ===== */
+.reports-main {
+  margin-left: 240px;        /* 🔥 prevents overlap */
+  width: calc(100% - 240px);
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+/* ===== TITLE ===== */
+.reports-main h2 {
+  margin-bottom: 20px;
+}
+
+/* ===== CHART CARD ===== */
+.chart-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  max-width: 950px;
+  margin: 30px auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .reports-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 15px;
+  }
+}
