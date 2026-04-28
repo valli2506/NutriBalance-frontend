@@ -1,127 +1,94 @@
 import React, { useState } from "react";
 import "../styles/chat.css";
 
-function ChatBot() {
+function Chat() {
+
   const [messages, setMessages] = useState([
     {
-      text: "👋 Welcome! I'm Nutri AI. Ask me about diet, calories, protein, water etc.",
-      sender: "bot",
-      options: ["Weight Loss Diet", "Weight Gain Diet", "Protein Foods", "Water Intake"]
+      text: "👋 Hi! Ask me anything about diet, BMI, calories, protein, water etc.",
+      sender: "bot"
     }
   ]);
 
   const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false);
 
   const getReply = (msg) => {
     msg = msg.toLowerCase();
 
-    if (msg.includes("weight loss")) {
-      return {
-        text: "For weight loss choose low calorie foods 🥗",
-        options: ["Oats", "Salads", "Fruits", "Green Tea", "Soup"]
-      };
-    }
+    if (msg.includes("diet"))
+      return "Eat balanced meals with proteins, carbs & vitamins 🥗";
 
-    if (msg.includes("weight gain")) {
-      return {
-        text: "For weight gain eat high calorie foods 💪",
-        options: ["Rice", "Milk", "Eggs", "Nuts", "Banana Shake"]
-      };
-    }
+    if (msg.includes("bmi"))
+      return "BMI = weight / height². It shows your fitness level 📏";
 
-    if (msg.includes("protein")) {
-      return {
-        text: "Protein rich foods:",
-        options: ["Eggs", "Chicken", "Paneer", "Dal", "Soybeans"]
-      };
-    }
+    if (msg.includes("protein"))
+      return "Protein foods: eggs, milk, paneer, beans 💪";
 
-    if (msg.includes("water")) {
-      return {
-        text: "Stay hydrated 💧",
-        options: ["2-3 Liters", "Coconut Water", "Water Timing", "Benefits"]
-      };
-    }
+    if (msg.includes("water"))
+      return "Drink at least 6–8 glasses of water daily 💧";
 
-    return {
-      text: "Eat healthy and stay fit 💪",
-      options: ["Diet Tips", "Workout Tips"]
-    };
+    if (msg.includes("weight loss"))
+      return "Reduce sugar, eat healthy, and exercise regularly 🏃";
+
+    if (msg.includes("weight gain"))
+      return "Increase calories and protein intake 💪";
+
+    if (msg.includes("hello") || msg.includes("hi"))
+      return "Hello 👋 How can I help you?";
+
+    return "I can help with diet, BMI, nutrition & health tips 😊";
   };
 
-  const sendMessage = (msgText = input) => {
-    if (!msgText.trim()) return;
+  const sendMessage = (text) => {
+    const messageText = text || input;
+    if (!messageText.trim()) return;
 
-    const userMsg = { text: msgText, sender: "user" };
-    setMessages((prev) => [...prev, userMsg]);
+    const userMsg = { text: messageText, sender: "user" };
+    const botMsg = { text: getReply(messageText), sender: "bot" };
 
+    setMessages([...messages, userMsg, botMsg]);
     setInput("");
-    setTyping(true);
-
-    setTimeout(() => {
-      const botReply = getReply(msgText);
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: botReply.text,
-          sender: "bot",
-          options: botReply.options
-        }
-      ]);
-
-      setTyping(false);
-    }, 700);
   };
 
   return (
     <div className="chat-page">
 
       {/* LEFT SIDE */}
-      <div className="chat-left-ui">
-        <div className="center-box">
-          <div className="logo-circle">🤖</div>
-          <h1>Nutri AI</h1>
-        </div>
+      <div className="chat-left">
+        <div className="bot-icon">🤖</div>
+        <h1>Nutri AI</h1>
       </div>
 
       {/* RIGHT CHAT */}
-      <div className="chat-box">
+      <div className="chat-card">
 
-        <div className="chat-header">
-          <span className="dot"></span>
-          Nutri Assistant
-        </div>
+        <div className="chat-header">🟢 Nutri Assistant</div>
 
         <div className="chat-body">
           {messages.map((msg, i) => (
             <div key={i} className={`msg ${msg.sender}`}>
-              <div className="bubble">{msg.text}</div>
-
-              {msg.options && (
-                <div className="options">
-                  {msg.options.map((opt, idx) => (
-                    <button key={idx} onClick={() => sendMessage(opt)}>
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {msg.text}
             </div>
           ))}
 
-          {typing && <div className="typing">Typing...</div>}
+          {/* QUICK BUTTONS */}
+          <div className="quick-btns">
+            <button onClick={() => sendMessage("weight loss diet")}>Weight Loss</button>
+            <button onClick={() => sendMessage("weight gain diet")}>Weight Gain</button>
+            <button onClick={() => sendMessage("protein foods")}>Protein</button>
+            <button onClick={() => sendMessage("water intake")}>Water</button>
+          </div>
         </div>
 
-        <div className="chat-footer">
+        {/* INPUT */}
+        <div className="chat-input">
           <input
+            type="text"
+            placeholder="Ask something..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
-          <button onClick={() => sendMessage()}>➤</button>
+          <button onClick={() => sendMessage()}>Send</button>
         </div>
 
       </div>
@@ -129,4 +96,4 @@ function ChatBot() {
   );
 }
 
-export default ChatBot;
+export default Chat;

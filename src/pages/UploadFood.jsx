@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../styles/uploadFood.css";
 
 function UploadFood() {
@@ -7,7 +7,9 @@ function UploadFood() {
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
 
-  // IMAGE PREVIEW
+  const navigate = useNavigate();
+  const username = localStorage.getItem("username");
+
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -15,7 +17,6 @@ function UploadFood() {
     }
   };
 
-  // MOCK AI LOGIC
   const analyzeFood = () => {
     if (!foodName && !preview) {
       alert("Enter food or upload image");
@@ -43,105 +44,131 @@ function UploadFood() {
     setResult(data);
   };
 
-  // 🔥 SAVE TO BACKEND (ONLY FIX HERE)
   const saveFood = async () => {
     if (!result) {
-      alert("Analyze food first!");
+      alert("Analyze first!");
       return;
     }
 
     const today = new Date().toISOString().split("T")[0];
 
-    // ✅ GET CURRENT USER
-    const username = localStorage.getItem("username");
-
     const foodData = {
       name: foodName || "Food",
-      calories: Number(result.calories) || 0,
-      protein: Number(result.protein) || 0,
-      carbs: Number(result.carbs) || 0,
+      calories: result.calories,
+      protein: result.protein,
+      carbs: result.carbs,
       date: today,
-      username: username   // ✅ FIXED
+      username
     };
 
     try {
       const res = await fetch("http://localhost:8080/api/food/add", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(foodData)
       });
 
-      const data = await res.text();
+      alert(await res.text());
 
-      alert(data);
-
-      // RESET
       setFoodName("");
       setPreview(null);
       setResult(null);
 
-    } catch (error) {
+    } catch {
       alert("Error saving food 😢");
     }
   };
 
   return (
-    <div className="upload-container">
+    <div className="upload-wrapper">
 
-      {/* SIDEBAR */}
-      <div className="sidebar">
-        <h2>NutriBalance</h2>
-        <ul>
-          <li><Link to="/dashboard">🏠 Dashboard</Link></li>
-          <li><Link to="/profile">👤 Profile</Link></li>
-          <li className="active">📷 Upload Food</li>
-          <li><Link to="/history">📜 Food History</Link></li>
-          <li><Link to="/reports">📊 Reports</Link></li>
-          <li><Link to="/daily">📅 Daily</Link></li>
-          <li><Link to="/water">💧 Water</Link></li>
-          <li><Link to="/diet">🥗 Diet</Link></li>
-          <li><Link to="/chat">🤖 Chat</Link></li>
-        </ul>
-      </div>
+      {/* BACK BUTTON */}
+      <button className="back-btn" onClick={() => navigate(-1)}>
+        ⬅ Back
+      </button>
 
-      {/* MAIN */}
-      <div className="upload-main">
-        <h2>📷 Upload / Enter Food</h2>
+      <div className="upload-container">
 
+        {/* LEFT */}
         <div className="upload-card">
-          <input type="file" onChange={handleImage} />
 
-          {preview && (
-            <img src={preview} alt="preview" className="preview-img" />
-          )}
+          <h2>📤 Upload Food</h2>
+          <p className="subtitle">Track your meals and nutrition</p>
 
-          <p>OR</p>
+          <div className="form-grid">
 
-          <input
-            type="text"
-            placeholder="Enter food (milk, rice, egg...)"
-            value={foodName}
-            onChange={(e) => setFoodName(e.target.value)}
-          />
+            <div className="input-group">
+              <label>🍽 Food Name</label>
+              <input
+                type="text"
+                placeholder="e.g. Paneer Curry"
+                value={foodName}
+                onChange={(e) => setFoodName(e.target.value)}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>📷 Upload Image</label>
+              <input type="file" onChange={handleImage} />
+            </div>
+
+          </div>
+
+          {preview && <img src={preview} alt="preview" className="preview" />}
 
           <div className="btn-group">
-            <button onClick={analyzeFood}>Analyze</button>
-            <button onClick={saveFood}>Save</button>
+            <button className="analyze" onClick={analyzeFood}>Analyze</button>
+            <button className="save" onClick={saveFood}>Save</button>
           </div>
+
+          {result && (
+            <div className="result-card">
+              <h3>Nutrition Result</h3>
+              <p>🔥 {result.calories} kcal</p>
+              <p>💪 {result.protein} g protein</p>
+              <p>🍞 {result.carbs} g carbs</p>
+              <p>🧪 {result.vitamins}</p>
+              <p>🪨 {result.minerals}</p>
+            </div>
+          )}
+
+          {/* POPULAR */}
+          <div className="popular">
+            <h3>🍱 Popular Foods</h3>
+
+            <div className="food-list">
+              <div><span>🥚 Egg</span> <b>13g</b></div>
+              <div><span>🥛 Milk</span> <b>8g</b></div>
+              <div><span>🫘 Lentils</span> <b>9g</b></div>
+              <div><span>🧀 Paneer</span> <b>11g</b></div>
+              <div><span>🐟 Fish</span> <b>22g</b></div>
+            </div>
+          </div>
+
         </div>
 
-        {result && (
-          <div className="result-card">
-            <h3>Estimated Nutrition</h3>
-            <p>🔥 {result.calories} kcal</p>
-            <p>💪 {result.protein} g protein</p>
-            <p>🍞 {result.carbs} g carbs</p>
-            <p>🧪 {result.vitamins}</p>
-            <p>🪨 {result.minerals}</p>
+        {/* RIGHT */}
+        <div className="tips-card">
+
+          <h3>✨ Quick Tips</h3>
+
+          <div className="tip">
+            🎯 <b>Be Accurate</b>
+            <p>Use proper measurements</p>
           </div>
-        )}
+
+          <div className="tip">
+            🏷 <b>Use Labels</b>
+            <p>Check packaged food info</p>
+          </div>
+
+          <div className="tip">
+            📊 <b>Track Daily</b>
+            <p>Consistency gives better results</p>
+          </div>
+
+        </div>
+
       </div>
     </div>
   );

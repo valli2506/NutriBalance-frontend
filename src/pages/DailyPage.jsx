@@ -7,7 +7,17 @@ function DailyPage() {
   const [foods, setFoods] = useState([]);
   const [calories, setCalories] = useState(0);
   const [protein, setProtein] = useState(0);
-  const [carbs, setCarbs] = useState(0);
+
+  // ✅ manual ticks
+  const [checkedMeals, setCheckedMeals] = useState({
+    Breakfast: false,
+    Lunch: false,
+    Snack: false,
+    Dinner: false
+  });
+
+  // ✅ weekly data
+  const [weekData, setWeekData] = useState([]);
 
   const CAL_GOAL = 2000;
   const PROTEIN_GOAL = 60;
@@ -18,37 +28,58 @@ function DailyPage() {
 
   const fetchFoods = async () => {
     try {
-
-      // 🔥 GET USERNAME FROM LOCALSTORAGE
       const username = localStorage.getItem("username");
 
-      const response = await fetch(`http://localhost:8080/api/food/user/${username}`);
-      const data = await response.json();
+      const res = await fetch(`http://localhost:8080/api/food/user/${username}`);
+      const data = await res.json();
 
       const today = new Date().toLocaleDateString("en-CA");
 
-      // ✅ FILTER TODAY FOOD
-      const todayFoods = data.filter(f => f.date === today);
+      // ✅ TODAY DATA
+      const todayFoods = data.filter(f =>
+        (f.date || "").startsWith(today)
+      );
 
       setFoods(todayFoods);
 
-      let totalCal = 0;
-      let totalPro = 0;
-      let totalCarbs = 0;
+      let cal = 0, pro = 0;
 
       todayFoods.forEach(f => {
-        totalCal += f.calories || 0;
-        totalPro += f.protein || 0;
-        totalCarbs += f.carbs || 0;
+        cal += f.calories || 0;
+        pro += f.protein || 0;
       });
 
-      setCalories(totalCal);
-      setProtein(totalPro);
-      setCarbs(totalCarbs);
+      setCalories(cal);
+      setProtein(pro);
 
-    } catch (error) {
-      console.error("Error:", error);
+      // ✅ WEEK DATA (last 7 days)
+      const last7 = data.filter(f => {
+        const d = new Date(f.date);
+        const now = new Date();
+        const diff = (now - d) / (1000 * 60 * 60 * 24);
+        return diff <= 7;
+      });
+
+      const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+      const activeDays = new Set(
+        last7.map(f =>
+          new Date(f.date).toLocaleDateString("en-US", { weekday: "short" })
+        )
+      );
+
+      setWeekData(days.map(d => activeDays.has(d)));
+
+    } catch (err) {
+      console.error(err);
     }
+  };
+
+  // ✅ toggle meals manually
+  const toggleMeal = (meal) => {
+    setCheckedMeals(prev => ({
+      ...prev,
+      [meal]: !prev[meal]
+    }));
   };
 
   return (
@@ -59,93 +90,89 @@ function DailyPage() {
         <h2>NutriBalance</h2>
         <ul>
           <li><Link to="/dashboard">🏠 Dashboard</Link></li>
-          <li><Link to="/profile">👤 Profile</Link></li>
-          <li><Link to="/upload-food">📷 Upload Food</Link></li>
-          <li><Link to="/history">📜 Food History</Link></li>
-          <li><Link to="/reports">📊 Reports</Link></li>
-          <li><Link to="/daily">📅 Daily</Link></li>
-          <li><Link to="/water">💧 Water</Link></li>
-          <li><Link to="/diet">🥗 Diet</Link></li>
-          <li><Link to="/chat">🤖 Chat</Link></li>
+                    <li><Link to="/profile">👤 Profile</Link></li>
+                    <li><Link to="/upload-food">📷 Upload Food</Link></li>
+                    <li><Link to="/history">📜 Food History</Link></li>
+                    <li><Link to="/reports">📊 Reports</Link></li>
+                    <li><Link to="/daily">📅 Daily</Link></li>
+                    <li><Link to="/water">💧 Water</Link></li>
+                    <li><Link to="/diet">🥗 Diet</Link></li>
+                    <li><Link to="/chat">🤖 Chat</Link></li>
         </ul>
       </div>
 
       {/* MAIN */}
       <div className="daily-main">
 
-        <h2>📅 Today’s Intake</h2>
+        <h1>🎯 Daily Tracker</h1>
 
-        {/* 🔥 PROGRESS */}
-        <div className="progress-section">
+        <div className="grid">
 
-          <div className="progress-card">
-            <h3>🔥 Calories</h3>
-            <p>{calories} / {CAL_GOAL} kcal</p>
-            <div className="bar">
-              <div
-                className="fill"
-                style={{ width: `${Math.min((calories / CAL_GOAL) * 100, 100)}%` }}
-              ></div>
-            </div>
-          </div>
+          {/* LEFT */}
+          <div className="left">
 
-          <div className="progress-card">
-            <h3>💪 Protein</h3>
-            <p>{protein} / {PROTEIN_GOAL} g</p>
-            <div className="bar">
-              <div
-                className="fill protein"
-                style={{ width: `${Math.min((protein / PROTEIN_GOAL) * 100, 100)}%` }}
-              ></div>
-            </div>
-          </div>
+            {/* ✅ PROGRESS */}
+            <div className="progress-card">
+              <h2>Today's Progress</h2>
 
-        </div>
-
-        {/* EXTRA */}
-        <div className="extra-grid">
-
-          <div className="extra-card">
-            <h3>🍞 Carbs</h3>
-            <p>{carbs} g</p>
-          </div>
-
-          <div className="extra-card">
-            <h3>🧪 Vitamins</h3>
-            <p>No data</p>
-          </div>
-
-          <div className="extra-card">
-            <h3>🪨 Minerals</h3>
-            <p>No data</p>
-          </div>
-
-          <div className="extra-card">
-            <h3>🥛 Dairy</h3>
-            <p>0 items</p>
-          </div>
-
-        </div>
-
-        {/* FOOD LIST */}
-        <div className="food-section">
-          <h3>🍱 Foods Today</h3>
-
-          {foods.length === 0 ? (
-            <p>No food added today</p>
-          ) : (
-            foods.map((f, i) => (
-              <div key={i} className="food-item">
-                <div>
-                  <h4>{f.name}</h4>
-                </div>
-                <div className="right">
-                  <p>{f.calories} kcal</p>
-                  <p>{f.protein} g</p>
-                </div>
+              <p>Calories {calories}/{CAL_GOAL}</p>
+              <div className="bar">
+                <div style={{ width: `${(calories / CAL_GOAL) * 100}%` }}></div>
               </div>
-            ))
-          )}
+
+              <p>Protein {protein}/{PROTEIN_GOAL}</p>
+              <div className="bar protein">
+                <div style={{ width: `${(protein / PROTEIN_GOAL) * 100}%` }}></div>
+              </div>
+            </div>
+
+            {/* ✅ FOODS YOU ATE */}
+            <div className="foods-card">
+              <h3>🍽 Foods You Ate Today</h3>
+
+              {foods.length === 0 ? (
+                <p>No food added</p>
+              ) : (
+                foods.map((f, i) => (
+                  <div key={i} className="food-item">
+                    <span>{f.name}</span>
+                    <span>{f.calories} kcal</span>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* ✅ MEAL CHECKBOXES */}
+            <div className="meals">
+              {["Breakfast","Lunch","Snack","Dinner"].map((meal, i) => (
+                <div
+                  key={i}
+                  className={`meal ${checkedMeals[meal] ? "done" : ""}`}
+                  onClick={() => toggleMeal(meal)}
+                >
+                  <div className="circle">
+                    {checkedMeals[meal] && "✔"}
+                  </div>
+                  <span>{meal}</span>
+                </div>
+              ))}
+            </div>
+
+          </div>
+
+          {/* RIGHT */}
+          <div className="right">
+
+            <h3>🏅 This Week</h3>
+
+            {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map((d, i) => (
+              <div key={i} className={`day ${weekData[i] ? "active" : ""}`}>
+                <span>{d}</span>
+                <span>{weekData[i] ? "✔" : ""}</span>
+              </div>
+            ))}
+
+          </div>
 
         </div>
 

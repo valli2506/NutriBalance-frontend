@@ -6,10 +6,35 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");   // ✅ FIX
+  const [email, setEmail] = useState("");   // 🔥 email instead of username
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  const [otp, setOtp] = useState("");
+  const [generatedOtp, setGeneratedOtp] = useState("");
+  const [showOtpBox, setShowOtpBox] = useState(false);
+
+  // 🔥 STEP 1: SEND OTP (FRONTEND ONLY)
+  const sendOtp = () => {
+    if (!email || !password) {
+      alert("Enter email & password first ❗");
+      return;
+    }
+
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    setGeneratedOtp(newOtp);
+    setShowOtpBox(true);
+
+    alert("OTP (demo): " + newOtp); // simulate email
+  };
+
+  // 🔥 STEP 2: VERIFY OTP → THEN LOGIN API
+  const verifyAndLogin = async () => {
+
+    if (otp !== generatedOtp) {
+      alert("Invalid OTP ❌");
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:8080/api/auth/login", {
@@ -18,7 +43,7 @@ function Login() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          username: username.trim(),
+          username: email.trim(),   // ✅ still sending as username
           password: password
         })
       });
@@ -27,8 +52,7 @@ function Login() {
 
       if (result.includes("successful")) {
 
-        // ✅ store username
-        localStorage.setItem("username", username);
+        localStorage.setItem("username", email);
 
         navigate("/dashboard");
 
@@ -66,9 +90,9 @@ function Login() {
           <h2>Login to Your Account</h2>
 
           <input
-            type="text"   // 🔥 FIXED
-            placeholder="Username"
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
@@ -77,7 +101,25 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button onClick={handleLogin}>Login</button>
+          {/* 🔥 STEP 1 BUTTON */}
+          {!showOtpBox && (
+            <button onClick={sendOtp}>Send OTP</button>
+          )}
+
+          {/* 🔥 STEP 2 OTP BOX */}
+          {showOtpBox && (
+            <>
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                onChange={(e) => setOtp(e.target.value)}
+              />
+
+              <button onClick={verifyAndLogin}>
+                Verify & Login
+              </button>
+            </>
+          )}
 
           <p>
             Don't have an account? <a href="/signup">Signup</a>

@@ -1,159 +1,121 @@
-.upload-page {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background: linear-gradient(135deg, #fb7dad, #93f9b9);
-  font-family: "Poppins", sans-serif;
+.upload-wrapper {
+  padding: 20px;
+  background: #f5f7fb;
+  min-height: 100vh;
 }
 
-.upload-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  border-radius: 20px;
-  width: 350px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  text-align: center;
-}
-
-.upload-card h2 {
+/* BACK BUTTON */
+.back-btn {
   margin-bottom: 15px;
-}
-
-.upload-card input[type="file"] {
-  margin-bottom: 10px;
-}
-
-.upload-card input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-.upload-card button {
-  width: 100%;
-  padding: 12px;
-  background: #1d976c;
-  color: white;
+  padding: 8px 15px;
   border: none;
-  border-radius: 10px;
-  font-weight: bold;
+  border-radius: 8px;
+  background: #6366f1;
+  color: white;
   cursor: pointer;
 }
 
-.upload-card button:hover {
-  background: #159957;
-}
-
-.preview {
-  width: 100%;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-.divider {
-  margin: 10px 0;
-  color: gray;
-}
-
-.result-card {
-  margin-top: 20px;
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  width: 350px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
+/* MAIN LAYOUT */
 .upload-container {
-  display: flex;
-  font-family: "Poppins", sans-serif;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 220px;
-  height: 100vh;
-  background: linear-gradient(180deg, #1d976c, #93f9b9);
-  color: white;
-  padding: 20px;
-  position: fixed;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  margin: 12px 0;
-}
-
-.sidebar a {
-  color: white;
-  text-decoration: none;
-}
-
-/* MAIN */
-.upload-main {
-  margin-left: 240px;
-  padding: 40px;
-  width: 100%;
-  background: #f5f7fa;
-  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+  align-items: start;
 }
 
 /* CARD */
 .upload-card {
   background: white;
   padding: 25px;
-  border-radius: 15px;
-  width: 350px;
-  margin: auto;
-  text-align: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border-radius: 18px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
-.upload-card input {
-  margin: 10px 0;
-  padding: 10px;
-  width: 90%;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.subtitle {
+  color: gray;
+  margin-bottom: 15px;
 }
 
-.preview-img {
+/* GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.input-group input {
   width: 100%;
+  padding: 10px;
   border-radius: 10px;
-  margin-top: 10px;
+  border: 1px solid #ddd;
+  margin-top: 5px;
 }
 
 /* BUTTONS */
-.btn-group button {
-  margin: 10px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  background: #1d976c;
-  color: white;
-  cursor: pointer;
+.btn-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
 }
 
-.btn-group button:hover {
-  background: #159957;
+button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.analyze {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+.save {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: white;
 }
 
 /* RESULT */
 .result-card {
-  margin-top: 30px;
-  background: white;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 15px;
   border-radius: 12px;
-  width: 350px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  background: #f1f5f9;
+}
+
+/* IMAGE */
+.preview {
+  width: 120px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+/* POPULAR */
+.popular {
+  margin-top: 25px;
+}
+
+.food-list div {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* TIPS */
+.tips-card {
+  background: linear-gradient(135deg, #9333ea, #ec4899);
+  color: white;
+  padding: 20px;
+  border-radius: 18px;
+  height: fit-content;
+}
+
+.tip {
+  background: rgba(255,255,255,0.2);
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
 }

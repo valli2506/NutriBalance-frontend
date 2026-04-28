@@ -19,6 +19,7 @@ function Water() {
       const data = await res.json();
 
       const today = new Date().toLocaleDateString("en-CA");
+
       const total = data
         .filter(w => w.date === today)
         .reduce((sum, w) => sum + (w.amount || 0), 0);
@@ -26,7 +27,7 @@ function Water() {
       setWater(total);
 
     } catch (err) {
-      console.error("Error fetching water:", err);
+      console.error("Error:", err);
     }
   };
 
@@ -38,17 +39,19 @@ function Water() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          username: username,
-          amount: amount
+          username,
+          amount
         })
       });
 
       fetchWater();
 
     } catch (error) {
-      console.error("Error adding water:", error);
+      console.error("Error:", error);
     }
   };
+
+  const percentage = Math.min((water / WATER_GOAL) * 100, 100);
 
   return (
     <div className="water-container">
@@ -63,7 +66,7 @@ function Water() {
           <li><Link to="/history">📜 Food History</Link></li>
           <li><Link to="/reports">📊 Reports</Link></li>
           <li><Link to="/daily">📅 Daily</Link></li>
-          <li><Link to="/water">💧 Water</Link></li>
+          <li className="active">💧 Water</li>
           <li><Link to="/diet">🥗 Diet</Link></li>
           <li><Link to="/chat">🤖 Chat</Link></li>
         </ul>
@@ -72,44 +75,92 @@ function Water() {
       {/* MAIN */}
       <div className="water-main">
 
-        <h2>💧 Water Intake</h2>
+        <h1>💧 Water Intake Tracker</h1>
+        <p className="subtitle">Stay hydrated and track your daily water consumption</p>
 
-        <div className="water-card">
+        <div className="water-grid">
 
-          <h3>{water} / {WATER_GOAL} ml</h3>
+          {/* LEFT CARD */}
+          <div className="water-card">
 
-          <div className="progress-bar">
-            <div
-              className="fill water"
-              style={{
-                width: `${Math.min((water / WATER_GOAL) * 100, 100)}%`
-              }}
-            ></div>
-          </div>
+            <h3>➕ Add Water</h3>
+            <p className="sub">Log your water consumption</p>
 
-          {/* 🔥 BOTTLE ANIMATION */}
-          <div className="bottle">
-            <div
-              className="water-fill"
-              style={{
-                height: `${Math.min((water / WATER_GOAL) * 100, 100)}%`
-              }}
-            >
-              <div className="wave"></div>
+            <input
+              type="number"
+              value={250}
+              className="input"
+              readOnly
+            />
+
+            <div className="quick-buttons">
+              <div onClick={() => addWater(250)}>🥤 1 Glass<br /><span>250ml</span></div>
+              <div onClick={() => addWater(500)}>💧 1 Bottle<br /><span>500ml</span></div>
+              <div onClick={() => addWater(750)}>🧴 Large<br /><span>750ml</span></div>
             </div>
+
+            <button className="add-btn" onClick={() => addWater(250)}>
+              ➕ Add Water
+            </button>
+
+            {/* PROGRESS */}
+            <div className="progress-section">
+              <div className="progress-header">
+                <span>Daily Progress</span>
+                <b>{water}ml / {WATER_GOAL}ml</b>
+              </div>
+
+              <div className="progress-bar">
+                <div
+                  className="fill"
+                  style={{ width: `${percentage}%` }}
+                ></div>
+              </div>
+
+              <p>{Math.round(percentage)}% of daily goal achieved</p>
+            </div>
+
+            {/* BENEFITS */}
+            <div className="benefits">
+              <h4>📈 Hydration Benefits</h4>
+              <ul>
+                <li>✔ Improves physical performance</li>
+                <li>✔ Supports brain function</li>
+                <li>✔ Keeps skin healthy</li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* RIGHT CARD (BOTTLE UI) */}
+          <div className="visual-card">
+
+            <h3>Hydration Visualization</h3>
+
+            <div className="bottle">
+              <div
+                className="water-fill"
+                style={{ height: `${percentage}%` }}
+              >
+                <div className="wave"></div>
+              </div>
+
+              <div className="percent-box">
+                💧 {Math.round(percentage)}%
+              </div>
+            </div>
+
+            <h2>{water}ml</h2>
+            <p>consumed today</p>
+
+            <div className="remaining">
+              {WATER_GOAL - water}ml remaining
+            </div>
+
           </div>
 
         </div>
-
-        {/* BUTTONS */}
-        <div className="water-buttons">
-          <button onClick={() => addWater(250)}>+250 ml</button>
-          <button onClick={() => addWater(500)}>+500 ml</button>
-          <button onClick={() => addWater(1000)}>+1 L</button>
-        </div>
-
       </div>
-
     </div>
   );
 }
