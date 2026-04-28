@@ -13,9 +13,9 @@ function Login() {
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [showOtpBox, setShowOtpBox] = useState(false);
 
-  // 🔥 STEP 1: SEND OTP (FRONTEND ONLY)
+  
   const sendOtp = () => {
-    
+
     if (!email || !password) {
       alert("Enter email & password first ❗");
       return;
